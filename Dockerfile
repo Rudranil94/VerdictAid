@@ -19,8 +19,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy requirements file
 COPY requirements.txt .
 
-# Install Python dependencies in two steps to optimize caching
+# Install Python dependencies with --no-deps first, then install dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir --no-deps -r requirements.txt && \
     pip install --no-cache-dir -r requirements.txt
 
 # Download spaCy language models
