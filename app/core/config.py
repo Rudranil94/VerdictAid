@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://user:password@host:port/dbname")
     TEST_DATABASE_URL: Optional[str] = None
+    DB_ECHO: bool = False
     
     # Redis
     REDIS_URL: str = os.getenv("REDIS_URL", "redis://host:port")
