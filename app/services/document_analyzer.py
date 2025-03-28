@@ -1,5 +1,5 @@
 from typing import Dict, List, Optional
-from langchain.llms import OpenAI
+from langchain_community.llms import OpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from app.core.config import settings
 
