@@ -29,7 +29,7 @@ RUN pip install --no-cache-dir \
     https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.7.0/fr_core_news_sm-3.7.0-py3-none-any.whl \
     https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-3.7.0/de_core_news_sm-3.7.0-py3-none-any.whl
 
-# Copy application code
+# Copy application code and start script
 COPY . .
 
 # Create non-root user
@@ -40,23 +40,7 @@ USER appuser
 # Expose port
 EXPOSE 8000
 
-# Create startup script
-COPY <<EOF /app/start.sh
-#!/bin/bash
-# Wait for database to be ready
-echo "Waiting for database..."
-while ! nc -z $DB_HOST $DB_PORT; do
-  sleep 1
-done
-echo "Database is ready!"
-
-# Run database migrations
-alembic upgrade head
-
-# Start the application
-exec uvicorn app.main:app --host 0.0.0.0 --port $PORT
-EOF
-
+# Make start script executable
 RUN chmod +x /app/start.sh
 
 # Run the startup script
