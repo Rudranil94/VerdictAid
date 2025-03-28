@@ -31,8 +31,9 @@ RUN pip install --no-cache-dir \
     https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.7.0/fr_core_news_sm-3.7.0-py3-none-any.whl \
     https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-3.7.0/de_core_news_sm-3.7.0-py3-none-any.whl
 
-# Copy application code
+# Copy application code and test environment
 COPY . .
+COPY .env.test .env
 
 # Create non-root user
 RUN useradd -m -u 1000 appuser && \
