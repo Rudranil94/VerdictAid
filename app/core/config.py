@@ -66,3 +66,5 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Create cached settings instance."""
     return Settings()
+
+settings = get_settings()
