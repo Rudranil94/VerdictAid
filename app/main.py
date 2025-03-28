@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core import settings
+from app.core.config import settings
 from app.api.v1.api import api_router
 from app.db.session import get_async_session
 from app.core.redis import get_redis
