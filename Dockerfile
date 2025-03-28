@@ -13,6 +13,7 @@ ENV PYTHONPATH=/app \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
+    netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements file
@@ -39,5 +40,24 @@ USER appuser
 # Expose port
 EXPOSE 8000
 
-# Run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Create startup script
+COPY <<EOF /app/start.sh
+#!/bin/bash
+# Wait for database to be ready
+echo "Waiting for database..."
+while ! nc -z $DB_HOST $DB_PORT; do
+  sleep 1
+done
+echo "Database is ready!"
+
+# Run database migrations
+alembic upgrade head
+
+# Start the application
+exec uvicorn app.main:app --host 0.0.0.0 --port $PORT
+EOF
+
+RUN chmod +x /app/start.sh
+
+# Run the startup script
+CMD ["/app/start.sh"]

@@ -1,7 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.api.v1.api import api_router
+from app.db.session import get_async_session
+from app.core.redis import get_redis
 
 app = FastAPI(
     title="Verdict Aid",
@@ -23,10 +26,33 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 
 # Health check endpoint
 @app.get("/health")
-async def health_check():
-    return {
+async def health_check(
+    session: AsyncSession = Depends(get_async_session),
+    redis = Depends(get_redis)
+):
+    status = {
         "status": "healthy",
         "service": "Verdict Aid",
         "version": settings.VERSION,
-        "api_version": "v1"
+        "api_version": "v1",
+        "components": {
+            "database": "healthy",
+            "redis": "healthy"
+        }
     }
+    
+    try:
+        # Test database connection
+        await session.execute("SELECT 1")
+    except Exception as e:
+        status["components"]["database"] = f"unhealthy: {str(e)}"
+        status["status"] = "unhealthy"
+    
+    try:
+        # Test Redis connection
+        await redis.ping()
+    except Exception as e:
+        status["components"]["redis"] = f"unhealthy: {str(e)}"
+        status["status"] = "unhealthy"
+    
+    return status
