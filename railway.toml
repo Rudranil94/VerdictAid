@@ -32,6 +32,10 @@ SMTP_PORT = "587"
 SMTP_USER = "your-email@gmail.com"
 SMTP_PASSWORD = "your-app-specific-password"
 
+# Email
+EMAIL_FROM_ADDRESS = "noreply@example.com"
+EMAIL_FROM_NAME = "Verdict Aid"
+
 # VAPID
 VAPID_PUBLIC_KEY = "your-vapid-public-key"
 VAPID_PRIVATE_KEY = "your-vapid-private-key"
