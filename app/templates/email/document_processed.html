@@ -1,0 +1,51 @@
+{% extends "email/base.html" %}
+
+{% block title %}Document Processing Complete{% endblock %}
+
+{% block header %}Document Processing Update{% endblock %}
+
+{% block content %}
+<h2>Document Processing Complete</h2>
+
+<p>Hello,</p>
+
+<p>Your document has been processed. Here are the details:</p>
+
+<div class="details">
+    <p><strong>Document ID:</strong> {{ data.document_id }}</p>
+    <p><strong>Status:</strong> 
+        <span class="{% if data.status == 'completed' %}success{% elif data.status == 'failed' %}error{% else %}warning{% endif %}">
+            {{ data.status|title }}
+        </span>
+    </p>
+    
+    {% if data.details %}
+    <div>
+        <p><strong>Processing Details:</strong></p>
+        <ul>
+            {% if data.details.pages %}
+            <li>Pages Processed: {{ data.details.pages }}</li>
+            {% endif %}
+            
+            {% if data.details.word_count %}
+            <li>Word Count: {{ data.details.word_count }}</li>
+            {% endif %}
+            
+            {% if data.details.error %}
+            <li class="error">Error: {{ data.details.error }}</li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+<p>You can view the processed document by clicking the button below:</p>
+
+<p style="text-align: center;">
+    <a href="{{ view_url }}" class="button">View Document</a>
+</p>
+
+<p>If you have any questions or concerns, please don't hesitate to contact our support team.</p>
+
+<p>Best regards,<br>The Verdict Aid Team</p>
+{% endblock %}

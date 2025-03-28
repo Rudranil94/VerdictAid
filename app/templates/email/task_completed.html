@@ -1,0 +1,46 @@
+{% extends "email/base.html" %}
+
+{% block title %}Task Completion Notification{% endblock %}
+
+{% block header %}Task Update{% endblock %}
+
+{% block content %}
+<h2>Task Completion Notification</h2>
+
+<p>Hello,</p>
+
+<p>A task has been completed in your Verdict Aid workspace. Here are the details:</p>
+
+<div class="details">
+    <p><strong>Task ID:</strong> {{ data.task_id }}</p>
+    <p><strong>Task Type:</strong> {{ data.task_type|title }}</p>
+    <p><strong>Status:</strong> 
+        <span class="{% if data.status == 'completed' %}success{% elif data.status == 'failed' %}error{% else %}warning{% endif %}">
+            {{ data.status|title }}
+        </span>
+    </p>
+    
+    {% if data.result %}
+    <div>
+        <p><strong>Task Results:</strong></p>
+        <ul>
+            {% for key, value in data.result.items() %}
+            <li><strong>{{ key|title }}:</strong> {{ value }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+{% if data.action_url %}
+<p>You can view more details by clicking the button below:</p>
+
+<p style="text-align: center;">
+    <a href="{{ data.action_url }}" class="button">View Details</a>
+</p>
+{% endif %}
+
+<p>If you have any questions about this task or need assistance, our support team is here to help.</p>
+
+<p>Best regards,<br>The Verdict Aid Team</p>
+{% endblock %}
