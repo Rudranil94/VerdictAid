@@ -51,7 +51,7 @@ RUN pip install --no-cache-dir \
     https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.7.0/fr_core_news_sm-3.7.0-py3-none-any.whl \
     https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-3.7.0/de_core_news_sm-3.7.0-py3-none-any.whl
 
-# Copy application code and start script
+# Copy application code 
 COPY . .
 
 # Create non-root user
@@ -62,8 +62,5 @@ USER appuser
 # Expose port
 EXPOSE 8000
 
-# Make start script executable
-RUN chmod +x /app/start.sh
-
 # Run the startup script
-CMD ["/app/start.sh"]
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
