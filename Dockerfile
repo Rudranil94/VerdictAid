@@ -32,7 +32,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     # Install authentication
     pip install --no-cache-dir "fastapi-users[sqlalchemy]==14.0.1" "bcrypt==4.1.2" && \
     # Install document processing
-    pip install --no-cache-dir "langchain-community==0.1.0" "langchain==0.1.0" "openai==1.10.0" && \
+    pip install --no-cache-dir "langchain-community" "langchain" "openai==1.10.0" && \
     pip install --no-cache-dir "pypdf2==3.0.1" "python-docx==1.0.1" "spacy==3.7.4" && \
     # Install notifications
     pip install --no-cache-dir "aiosmtplib==3.0.1" "jinja2==3.1.3" "pywebpush==1.14.0" "firebase-admin==6.3.0" && \
