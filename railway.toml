@@ -40,3 +40,6 @@ EMAIL_FROM_NAME = "Verdict Aid"
 VAPID_PUBLIC_KEY = "your-vapid-public-key"
 VAPID_PRIVATE_KEY = "your-vapid-private-key"
 VAPID_CLAIMS_EMAIL = "your-email@example.com"
+
+# OpenAI (Optional)
+OPENAI_API_KEY = "your-openai-api-key"

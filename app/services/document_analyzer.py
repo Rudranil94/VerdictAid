@@ -1,11 +1,14 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 from langchain.llms import OpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from app.core.config import settings
 
 class DocumentAnalyzer:
     def __init__(self):
-        self.llm = OpenAI(api_key=settings.OPENAI_API_KEY)
+        if settings.OPENAI_API_KEY:
+            self.llm = OpenAI(api_key=settings.OPENAI_API_KEY)
+        else:
+            self.llm = None
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=2000,
             chunk_overlap=200
@@ -15,7 +18,9 @@ class DocumentAnalyzer:
         """
         Simplifies legal document content into plain language.
         """
-        # Implementation using LangChain for document simplification
+        if not self.llm:
+            return f"Document simplification is not available. Please provide an OpenAI API key."
+        
         prompt = f"""
         Translate the following legal document into simple, plain language.
         Make it easy to understand while preserving all important legal meanings.
@@ -30,6 +35,12 @@ class DocumentAnalyzer:
         """
         Analyzes legal risks in the document.
         """
+        if not self.llm:
+            return {
+                "risks": ["Risk analysis is not available. Please provide an OpenAI API key."],
+                "recommendations": ["Please configure OpenAI API key to enable risk analysis."]
+            }
+        
         prompt = f"""
         Analyze the following legal document and identify potential risks
         and compliance issues. Format the response as a JSON with
@@ -44,6 +55,9 @@ class DocumentAnalyzer:
         """
         Extracts and explains key legal terms from the document.
         """
+        if not self.llm:
+            return [{"term": "Key term extraction", "explanation": "Not available. Please provide an OpenAI API key."}]
+        
         prompt = f"""
         Extract and explain key legal terms from the following document.
         Format the response as a list of JSON objects with 'term' and
@@ -54,16 +68,15 @@ class DocumentAnalyzer:
         """
         return await self._process_with_llm(prompt)
     
-    async def _process_with_llm(self, prompt: str) -> str:
+    async def _process_with_llm(self, prompt: str) -> any:
         """
-        Helper method to process text with the LLM.
+        Process prompt using the LLM.
         """
-        # Split text if it's too long
-        chunks = self.text_splitter.split_text(prompt)
-        responses = []
+        if not self.llm:
+            raise ValueError("LLM is not initialized. Please provide an OpenAI API key.")
         
-        for chunk in chunks:
-            response = self.llm(chunk)
-            responses.append(response)
-        
-        return " ".join(responses)
+        try:
+            response = await self.llm.apredict(prompt)
+            return response
+        except Exception as e:
+            raise ValueError(f"Error processing with LLM: {str(e)}")
