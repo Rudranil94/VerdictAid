@@ -5,9 +5,34 @@ dockerfilePath = "Dockerfile"
 [deploy]
 startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
 healthcheckPath = "/health"
-healthcheckTimeout = 300
+healthcheckTimeout = 30
+healthcheckInterval = 5
+healthcheckRetries = 3
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
 
 [service]
 name = "verdict-aid"
+
+[env]
+# Database
+DATABASE_URL = "postgresql://user:password@host:port/dbname"
+DB_HOST = "host"
+DB_PORT = "5432"
+
+# Redis
+REDIS_URL = "redis://host:port"
+
+# Security
+SECRET_KEY = "your-secret-key"
+
+# SMTP
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = "587"
+SMTP_USER = "your-email@gmail.com"
+SMTP_PASSWORD = "your-app-specific-password"
+
+# VAPID
+VAPID_PUBLIC_KEY = "your-vapid-public-key"
+VAPID_PRIVATE_KEY = "your-vapid-private-key"
+VAPID_CLAIMS_EMAIL = "your-email@example.com"

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
@@ -43,10 +43,13 @@ async def health_check(
     
     try:
         # Test database connection
-        await session.execute("SELECT 1")
+        result = await session.execute("SELECT 1")
+        if not result.scalar():
+            raise Exception("Database connection failed")
     except Exception as e:
         status["components"]["database"] = f"unhealthy: {str(e)}"
         status["status"] = "unhealthy"
+        raise HTTPException(status_code=503, detail="Database connection failed")
     
     try:
         # Test Redis connection
@@ -54,5 +57,6 @@ async def health_check(
     except Exception as e:
         status["components"]["redis"] = f"unhealthy: {str(e)}"
         status["status"] = "unhealthy"
+        raise HTTPException(status_code=503, detail="Redis connection failed")
     
     return status
